@@ -2,21 +2,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>補講</title>
+    <title>振替</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
 </head>
 <body>
-
+    <h1 id="title">補講について</h1>
     <form class="w-75 mx-auto">
-        <p class="mt-3">氏名</p>
+        <p class="mt-3">お子様の氏名</p>
         <div>
-            <input class="form-control w-100 mt-1" name="name" placeholder="" required>
+            <input class="form-control w-100 mt-1" name="student_name" placeholder="" required>
         </div>
         <p class="mt-3">現在お通いの"曜日/クラス名"</p>
         <div>
-        <select>
+        <select class="form-control w-100 mt-1" name="class_type">
             <option value="select01">水曜/春ビギナー/午後4:00～4:50</option>
     　　　　　　　　　　　　　　　　<option value="select02">水曜/秋チャレンジャー/午後5:30～6:50</option>
     　　　　　　　　　　　　　　　　<option value="select03">木曜/春チャレンジャー/午後5:30～6:50</option>
@@ -32,17 +32,17 @@
             <option value="select13">日曜/秋アドバンス/午後3:30～5:00</option>
 　　　　　　　　　　　　　　　　</select>
         </div>
-        <p class="mt-3">欠席される日付</p>
+        <p class="mt-3">欠席される日付<例:9/3(土)></p>
         <div>
-            <input class="form-control w-100 mt-1" name="fukkin" required>
+            <input class="form-control w-100 mt-1" name="date_of_absence" required>
         </div>
-        <p class="mt-3">希望される補講日時</p>
+        <p class="mt-3">希望される補講日<例:9/7(水)></p>
         <div>
-            <input class="form-control w-100 mt-1" name="haikin" required>
+            <input class="form-control w-100 mt-1" name="supplementary_date" required>
         </div>
         <p class="mt-3">(その他ご質問があれば)ご入力ください</p>
         <div>
-            <input class="form-control w-100 mt-1" name="sukuwat" required>
+            <input class="form-control w-100 mt-1" name="comments" value="">
         </div>
         <input type="submit" class="mt-4 btn btn-primary" value="送信">
     </form>
@@ -54,10 +54,16 @@
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
 
-        $(document).ready(function () {
-            const liffId = "1657463532-27YZQenz";
+        $(function () {
+            if(!liff.isInClient()){
+                window.location.href = 'introduction.html';
+            }
+        });
+                       
+        $(function () {
+            const liffId = "1657462599-Px4VaGRl";
             initializeLiff(liffId);
-        })
+        });
 
         function initializeLiff(liffId) {
             liff.init({
@@ -68,6 +74,7 @@
                 console.log('LIFF Initialization failed ', err);
             });
         }
+        
 
         function sendText(text) {
             liff.sendMessages([{
@@ -85,12 +92,13 @@
 
         $(function () {
             $('form').submit(function () {
-                const name    = $('input[name="name"]').val();
-                const udetate = $('input[name="udetate"]').val();
-                const fukkin  = $('input[name="fukkin"]').val();
-                const haikin  = $('input[name="haikin"]').val();
-                const sukuwat = $('input[name="sukuwat"]').val();
-                const msg = `${name}\n${udetate}\n${fukkin}\n${haikin}\n${sukuwat}`;
+                const title = $('#title').text();
+                const student_name    = $('input[name="student_name"]').val();
+                const class_type = $('[name="class_type"] option:selected').val();
+                const date_of_absence  = $('input[name="date_of_absence"]').val();
+                const supplementary_date  = $('input[name="supplementary_date"]').val();
+                const comments = $('input[name="comments"]').val();
+                const msg = `${title}\n${student_name}\n${class_type}\n${date_of_absence}\n${supplementary_date}\n${comments}`;
                 sendText(msg);
                 return false;
             });
